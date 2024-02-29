@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 import { ProductModule } from './product/product.module';
 
 @Module({
@@ -6,4 +6,4 @@ import { ProductModule } from './product/product.module';
   controllers: [],
   providers: []
 })
-export class AppModule {}
+export class AppModule { }
