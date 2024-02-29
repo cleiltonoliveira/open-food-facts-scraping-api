@@ -21,11 +21,4 @@ export default class Product {
       title: string;
     };
   }
-  constructor(data: any) {
-    // this.title = data.title;
-    // this.quantity = data.quantity;
-    // this.ingredients = data.ingredients;
-    // this.nutrition = data.nutrition;
-    // this.nova = data.nova;
-  }
 }

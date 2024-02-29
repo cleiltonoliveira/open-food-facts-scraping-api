@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Browser, Page } from 'puppeteer';
-import { BrowserPool } from "src/common/browser-pool";
+import { BrowserPool } from "src/common/browser/browser-pool";
 
 @Injectable()
 export class SiteFetcherService {
@@ -23,8 +23,9 @@ export class SiteFetcherService {
                 }
             });
             
+            console.log(`- Sending request to: ${pageUrl}` )
             await page.goto(pageUrl);
-
+            console.log(`- Request success!!!` )
             return page;
         } catch (error) {
             if (error.name === 'TimeoutError') {

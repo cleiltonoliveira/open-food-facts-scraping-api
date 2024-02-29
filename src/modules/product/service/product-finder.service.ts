@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { SiteFetcherService } from "../../../common/site-fetcher.service";
-import Product from "../model/Product";
+import { SiteFetcherService } from "../../../common/browser/site-fetcher.service";
+import Product from "../model/product";
 import { Page } from "puppeteer";
 
 @Injectable()
@@ -8,21 +8,12 @@ export class ProductFinderService {
 
     constructor(private readonly siteFetcherService: SiteFetcherService) { }
 
-    async fetch() {
-        const page = await this.siteFetcherService.fetch('https://br.openfoodfacts.org/')
-
-        await page.waitForSelector('button[data-dropdown="drop1"]');
-        await page.click('button[data-dropdown="drop1"]');
-        await page.waitForSelector("a[href$='/nutrition-grades']");
-
-        await page.click("a[href$='/nutrition-grades']");
-
-        return 'Hello World!';
-    }
-
     async findProductById(productId: string) {
         const page = await this.siteFetcherService.fetch('https://br.openfoodfacts.org/produto/' + productId)
-        const foodProduct = new Product({});
+        if (await page.title() == "Erro") {
+            return null
+        }
+        const foodProduct = new Product();
 
         await page.waitForSelector('#panel_nutrition_facts_table_content');
 
@@ -99,13 +90,16 @@ export class ProductFinderService {
             });
         });
 
-        const nutritionData = productDataTable.map(row => {
-            const [key, per100g, perServing] = row;
-            return { nutritionProperty: key, per100g: per100g, perServing: perServing }
-        })
-        return nutritionData;
-    }
+        const keys = ["Energia", "Gorduras/lípidos", "Carboidratos", "Fibra alimentar", "Proteínas", "Sal"]
 
+        const nutritionData = productDataTable.filter(row => keys.includes(row[0])) // Filter rows based on condition
+            .map(row => {
+                const [key, per100g, perServing] = row;
+                return { nutritionProperty: key, per100g, perServing };
+            });
+
+        return nutritionData
+    }
     private async getProductNovaInfo(page: Page) {
         const novaScore = await page.$eval("a[href$='#panel_nova_content'] > img", (element: HTMLElement) => {
             const parts = element.getAttribute("src").split("-");
