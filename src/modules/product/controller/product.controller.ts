@@ -1,13 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { ProductFilterService } from './service/product-filter.service';
-import { ProductFinderService } from './service/product-finder.service';
+import { ProductFinderService } from '../service/product-finder.service';
 import { Param } from '@nestjs/common';
-import Product from './Product';
+import Product from '../model/Product';
 
 @Controller()
 export class ProductController {
-  constructor(private readonly productFilterService: ProductFilterService,
-    private readonly productFinderService: ProductFinderService) { }
+  constructor(private readonly productFinderService: ProductFinderService) { }
 
   @Get()
   getHello(): string {

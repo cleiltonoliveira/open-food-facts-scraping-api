@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import puppeteer, { Browser, Page } from 'puppeteer';
-import { BrowserPool } from "src/BrowserPool";
+import { Browser, Page } from 'puppeteer';
+import { BrowserPool } from "src/common/browser-pool";
 
 @Injectable()
 export class SiteFetcherService {
@@ -22,7 +22,7 @@ export class SiteFetcherService {
                     req.continue();
                 }
             });
-
+            
             await page.goto(pageUrl);
 
             return page;

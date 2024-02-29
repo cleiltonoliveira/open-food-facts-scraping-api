@@ -1,5 +1,5 @@
 import { Provider, Scope } from '@nestjs/common';
-import { BrowserPool } from './BrowserPool'; 
+import { BrowserPool } from './browser-pool'; 
 
 export const browserPoolProvider= (poolSize: number): Provider => ({
     provide: BrowserPool,

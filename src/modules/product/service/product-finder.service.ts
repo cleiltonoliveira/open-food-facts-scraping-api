@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { SiteFetcherService } from "./site-fetcher.service";
-import Product from "../Product";
+import { SiteFetcherService } from "../../../common/site-fetcher.service";
+import Product from "../model/Product";
 import { Page } from "puppeteer";
 
 @Injectable()
