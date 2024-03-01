@@ -29,26 +29,13 @@ jobs:
       - name: Copy Swagger file to root directory
         run: |
           cp ./dist/swagger.json ./swagger.json
-
-      # - name: Checkout to docs branch
-      #   run: |
-      #     git checkout origin/docs
-
-      # - uses: actions/checkout@v2
-      #   with:
-      #     ref: docs
           
       - name: Commit changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git fetch 
-          git checkout origin/docs
+          git checkout docs
           git add swagger.json
           git commit -m "Generate Swagger files"
           git push origin docs
-      
-      # - name: Push changes
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
