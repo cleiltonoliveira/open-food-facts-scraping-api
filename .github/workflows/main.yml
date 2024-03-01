@@ -46,8 +46,9 @@ jobs:
           git checkout origin/docs
           git add swagger.json
           git commit -m "Generate Swagger files"
+          git push origin docs
       
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Push changes
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
