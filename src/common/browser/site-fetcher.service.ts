@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { Browser, Page } from 'puppeteer';
+import { Browser, Page, TimeoutError } from 'puppeteer';
 import { BrowserPool } from "src/common/browser/browser-pool";
+import GatewayTimeoutException from "src/error/custom-exceptions/gateway-timeout-exception";
 
 @Injectable()
 export class SiteFetcherService {
@@ -22,22 +23,20 @@ export class SiteFetcherService {
                     req.continue();
                 }
             });
-            
-            console.log(`- Sending request to: ${pageUrl}` )
+
+            console.log(`- Sending request to: ${pageUrl}`)
             await page.goto(pageUrl);
-            console.log(`- Request success!!!` )
+            console.log(`- Request success!!!`)
+
             return page;
         } catch (error) {
-            if (error.name === 'TimeoutError') {
-                console.error('Timeout Error:', error);
-            } else if (error.name === 'NetworkError') {
-                console.error('Network Error:', error);
-            } else {
-                console.error('An unexpected error occurred:', error);
-            }
-
             if (browser) {
                 await browser.close();
+            }
+            if (error instanceof TimeoutError) {
+                throw new GatewayTimeoutException("Gateway Timoutt")
+            } else {
+                throw error
             }
         }
     }
