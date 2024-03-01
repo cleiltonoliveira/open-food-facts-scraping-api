@@ -30,9 +30,14 @@ jobs:
         run: |
           cp ./dist/swagger.json ./swagger.json
 
-      - name: Checkout to docs branch
-        run: |
-          git checkout origin/docs
+      # - name: Checkout to docs branch
+      #   run: |
+      #     git checkout origin/docs
+
+      - uses: actions/checkout@v2
+        with:
+          ref: docs
+          
       - name: Commit changes
         run: |
           git config --local user.email "actions@github.com"
