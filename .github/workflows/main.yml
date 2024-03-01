@@ -35,7 +35,9 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git fetch 
+          git stash
           git checkout docs
+          git stash pop
           git add swagger.json
           git commit -m "Generate Swagger files"
           git push origin docs
