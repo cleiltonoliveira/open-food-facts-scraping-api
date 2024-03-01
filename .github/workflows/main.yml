@@ -28,18 +28,17 @@ jobs:
         
       - name: Copy Swagger file to root directory
         run: |
-          cp ./dist/swagger.json ./swagger.json
+          mkdir temp
+          cp ./dist/swagger.json ./temp/swagger.json
           
       - name: Commit changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git fetch 
-          git add swagger.json
-          git stash
           git checkout docs
-          git stash pop
-          git checkout --theirs swagger.json
+          rm swagger.json
+          cp ./temp/swagger.json swagger.json
           git add swagger.json
           git commit -m "Generate Swagger files"
           git push origin docs
