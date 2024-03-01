@@ -32,8 +32,7 @@ jobs:
 
       - name: Checkout to docs branch
         run: |
-          git checkout docs
-          
+          git checkout origin/docs
       - name: Commit changes
         run: |
           git config --local user.email "actions@github.com"
