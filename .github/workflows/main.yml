@@ -24,7 +24,7 @@ jobs:
         run: npm run build
 
       - name: Generate Swagger files
-        run: npm run swagger:generate
+        run: npm run generate:swagger
         
       - name: Copy Swagger file to root directory
         run: |
