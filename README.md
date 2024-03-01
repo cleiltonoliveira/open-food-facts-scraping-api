@@ -2,13 +2,27 @@
 
 # Open Food Facts Scraping API
 
+
+
 Esta é uma API em Nest que realiza scraping do site Open Food Facts possibilitando a busca de um produto específico através do seu código ou uma lista de produtos.
 
-Esta API utiliza o Puppeteer que é um biblioteca Node.js que fornece uma API para controle do browser Chrome/Chromium através do protolo DevTools [(Saiba mais)](https://pptr.dev/).
+A API utiliza o Puppeteer que é um biblioteca Node.js que fornece uma API para controle do browser Chrome/Chromium através do protolo DevTools [(Saiba mais)](https://pptr.dev/).
 
+*******
+Tabelas de conteúdo
+1. [Endpoints](#endpoints)  
+1.1 [Obter Produtos](#obterProdutos)  
+1.2 [Obter Produto por ID ](#obterProdutoPorId)
+2. [Desafios de construção](#desafios)
+3. [Como executar localmente](#executarLocal)
+4. [Especificação Swagger (OAS 3.0)](#specSwagger)
+*******
 Segue abaixo a descrição dos endpoints da API, bem como o seu comportamento.
+## Endpoints
+<div id='endpoints'/> 
 
 ### Obter Produtos
+<div id='obterProdutos'/> 
 
 Endpoint para obter uma lista de produtos baseado na classificação NOVA e/ou Nutri-Score.  
 [Classificação NOVA (Saiba mais)](https://br.openfoodfacts.org/nova-groups).  
@@ -58,6 +72,7 @@ Endpoint para obter uma lista de produtos baseado na classificação NOVA e/ou N
 ```
 
 ### Obter Produto por ID
+<div id='obterProdutoPorId'/> 
 
 Endpoint para obter um produto através do seu ID.
 
@@ -141,10 +156,8 @@ Endpoint para obter um produto através do seu ID.
 }
 ```
 
-**Para mais detalhes da especificação como tipos de campos e descrições, consulte a especificação Swagger no Git Pages do repositório.** [Acessar OAS](https://cleiltonoliveira.github.io/open-food-facts-scraping-api/).
-
-
-### Desafios encontrados na construção desta API
+## Desafios encontrados na construção desta API
+<div id='desafios'/> 
 
 O Puppeteer necessita de uma instância de browser para realizar uma requisição a uma página, assim, um desafio encontrado consiste em como lidar em cenários de várias requisições. Utilizar apenas uma instância de browser e deixar o Puppeteer criar várias páginas nessa instância pode gerar problemas, uma vez que o número de paginas que o browser conseguirá suportar não é conhecido e seria um cenário complicado para tratamento de erros.
 
@@ -153,14 +166,15 @@ Por outro lado, criar uma instância de browser para cada requisição pode aume
 Dessa forma, considerando o acima disposto, a abordagem adotada consistiu na criação de um pool de browsers onde as instâncias são obtidas para atender a solicitação e em seguida é devolvida ao pool ficando disponível para as próximas solicitações. Isso evita por exemplo que uma instância de browser seja criada e destruida a cada requisição do cliente, reduzindo o custo de processamento da API.  
 Nesse cenário, caso chegue uma requisição e não existir nenhuma instância disponível no pool, a API foi configurada para criar automaticamente novas instâncias para atender a demanda. Apesar disso, o pool não ultrapassará o número máximo de instâncias conforme definido ao iniciar a aplicação.
 
-# Executando a API localmente
+## Executando a API localmente
+<div id='executarLocal'/> 
 
 ## Pré-requisitos
 
 - Node.js e npm instalados na sua máquina. Você pode baixá-los e instalá-los a partir do [site oficial do Node.js](https://nodejs.org/).
 - Git instalado na sua máquina. Você pode baixá-lo e instalá-lo a partir do [site oficial do Git](https://git-scm.com/).
 
-## Clonando o Repositório
+### Clonando o Repositório
 
 Abra o terminal e execute o seguinte comando para clonar o repositório:
 
@@ -168,7 +182,7 @@ Abra o terminal e execute o seguinte comando para clonar o repositório:
 git clone https://github.com/cleiltonoliveira/open-food-facts-scraping-api.git
 ```
 
-## Instalando Dependências
+### Instalando Dependências
 
 Navegue até o diretório do projeto e execute o seguinte comando para instalar as dependências:
 
@@ -178,7 +192,7 @@ npm install
 ```
 
 
-## Executando o aplicativo
+### Executando o aplicativo
 
 Após a instalação das dependências, execute um dos seguites comandos para iniciar o servidor:
 
@@ -198,3 +212,14 @@ A aplicação escutará requisições em http://localhost:3000/
 ex: http://localhost:3000/api/v1/public/produtos/8412170038028
 
 Por padrão o app utiliza a porta 3000 para funcionar, caso deseje alterar, modifique a variáel PORT no ambiente de execução.
+
+## Especificação Swagger OAS 3.0
+<div id='specSwagger'/> 
+
+A API possui a especificação Swagger gerada através da integração com a biblioteca @nestjs/swagger. A biblioteca permite que a especifição seja gerada através de decorators nos controllers e nos objetos, e disponibiliza a especificação em uma rota da API, sendo por padrão http://localhost:3000/api.
+
+A questão é que para ter acesso ao Swagger é necessário executar a aplicação para ter acesso a rota na API.
+
+Assim, para facilitar o acesso ao Swagger, criei um workflow no GitHub Actions que é acionado sempre que um push é realizado na branch main. O workflow realiza o build do projeto e gera o arquivo Swagger, o qual é disponibilizado para GitHub Pages na branch docs.
+
+Link do Git Pages: [https://cleiltonoliveira.github.io/open-food-facts-scraping-api/](https://cleiltonoliveira.github.io/open-food-facts-scraping-api/)
