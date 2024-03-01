@@ -24,11 +24,35 @@ export class ProductFilterService {
         await page.waitForSelector('#products_match_all');
 
         console.log("Starting product list extraction...")
-        const productList = await this.extractProductDetails(page)
+
+        let productList: ProductFilterResult[] = await this.extractProductDetails(page)
+
+        while (await this.hasNextPage(page)) {
+            await this.goToNextPage(page)
+            await page.waitForSelector('#products_match_all');
+            let newElements = await this.extractProductDetails(page)
+            productList.push(...newElements)
+        }
         console.log("Extraction finished!")
         this.siteFetcherService.release(page);
-
         return productList;
+    }
+
+    private async hasNextPage(page: Page): Promise<Boolean> {
+        return await page.evaluate(() => {
+            const el = document.querySelector("#pages");
+            if (!el) return false
+            const nextButton = document.querySelector('a[rel="next$nofollow"]');
+            if (nextButton) return true
+            return false
+        });
+    }
+
+    private async goToNextPage(page: Page) {
+        await Promise.all([
+            page.waitForNavigation(),
+            page.click('a[rel="next$nofollow"]')
+        ])
     }
 
     private async extractProductDetails(page: Page): Promise<any> {
