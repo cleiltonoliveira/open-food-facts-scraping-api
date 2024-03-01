@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { SiteFetcherService } from "../../../common/browser/site-fetcher.service";
 import ProductFilterResult from "../model/product-filter-result";
 import { Page } from "puppeteer";
+import NotFoundException from "src/error/custom-exceptions/not-found-exception";
 
 @Injectable()
 export class ProductFilterService {
@@ -15,9 +16,11 @@ export class ProductFilterService {
 
         const page = await this.siteFetcherService.fetch(url)
 
-        if (await page.title() === "Erro") {
-            throw new Error("Failed to fetch product data: Page title is 'Erro'.");
+        await page.waitForSelector('title');
+        if (await page.title() == "Erro") {
+            throw new NotFoundException(`No products found for the filter${nutritionParam ? ' nutrition=' + nutritionParam : ''}${novaParam ? ' nova=' + novaParam : ''}`)
         }
+
         await page.waitForSelector('#products_match_all');
 
         console.log("Starting product list extraction...")
@@ -51,13 +54,17 @@ export class ProductFilterService {
 
             function extractNutritionDetail(element: HTMLElement) {
                 const score = extractScore(element)
-                const title = element.getAttribute('title').split("-")[2].trim()
+                const titleText = element.getAttribute('title')
+                const index = titleText.indexOf('-', 7);
+                const title = index !== -1 ? titleText.substring(index + 1).trim() : titleText
                 return { score: score, title: title }
             }
 
             function extractNovaDetail(element: HTMLElement) {
                 const score = extractScore(element)
-                const title = element.getAttribute('title').split("-").pop().trim()
+                const titleText = element.getAttribute('title')
+                const index = titleText.indexOf('-');
+                const title = index !== -1 ? titleText.substring(index + 1).trim() : titleText
                 return { score: score, title: title }
             }
 

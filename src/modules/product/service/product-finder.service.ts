@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { SiteFetcherService } from "../../../common/browser/site-fetcher.service";
 import Product from "../model/product";
 import { Page } from "puppeteer";
+import NotFoundException from "src/error/custom-exceptions/not-found-exception";
 
 @Injectable()
 export class ProductFinderService {
@@ -10,8 +11,9 @@ export class ProductFinderService {
 
     async findProductById(productId: string) {
         const page = await this.siteFetcherService.fetch('https://br.openfoodfacts.org/produto/' + productId)
+        await page.waitForSelector('title');
         if (await page.title() == "Erro") {
-            return null
+           throw new NotFoundException(`Product not found for id ${productId}`)
         }
         const foodProduct = new Product();
 
