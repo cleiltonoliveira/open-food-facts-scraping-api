@@ -6,8 +6,8 @@ const fs = require('fs');
 async function generateSwagger() {
   const app = await NestFactory.create(AppModule);
   const options = new DocumentBuilder()
-    .setTitle('Your API Title')
-    .setDescription('Your API Description')
+    .setTitle('Open Food Facts Scraping API')
+    .setDescription('Esta realiza scraping do site Open Food Facts possibilitando a busca de um produto específico através do seu código ou uma lista de produtos.')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
