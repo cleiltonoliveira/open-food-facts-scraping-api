@@ -4,6 +4,7 @@ import BadRequestException from './custom-exceptions/bad-request-exception';
 import NotFoundException from './custom-exceptions/not-found-exception';
 import GatewayTimeoutException from './custom-exceptions/gateway-timeout-exception';
 import BadGatewayException from './custom-exceptions/bad-gateway-exception';
+import ErrorResponse from './error-response';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -12,8 +13,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    let errorBody: { statusCode: any, timestamp: any, path: any, message: any }
-
+    let errorBody: ErrorResponse
+    
     if (exception instanceof GatewayTimeoutException) {
       errorBody = this.buildErrorBody(HttpStatus.GATEWAY_TIMEOUT, request.url, exception.message)
     } else if (exception instanceof BadGatewayException) {

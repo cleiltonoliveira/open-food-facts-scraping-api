@@ -13,7 +13,7 @@ export class BrowserPool {
         this.pool = [];
         this.initializing = false;
         this.initializationPromise = null;
-        this.initialize
+        this.initialize()
     }
 
     async initialize() {

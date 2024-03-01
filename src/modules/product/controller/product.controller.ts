@@ -2,26 +2,47 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ProductFinderService } from '../service/product-finder.service';
 import { Param } from '@nestjs/common';
 import Product from '../model/product';
-import ProductDto from '../dto/product-dto';
+import ProductDto from '../dto/product.dto';
 import { ProductFilterService } from '../service/product-filter.service';
+import ProductFilterResult from '../model/product-filter-result';
+import {
+  refs,
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiDefaultResponse
+} from '@nestjs/swagger';
+import { productResponseExample } from 'src/swagger/res/find-by-id-product-response-example';
+import ProductDtoSwaggerDescritor from 'src/swagger/product-dto-swagger-descritor';
+import ErrorResponse from 'src/error/error-response';
+import ProductFilterResultSwaggerDescritor from 'src/swagger/product-filter-result-swagger-descritor';
+import { findByFilterResponseExample } from 'src/swagger/res/find-by-filter-response-example';
 
 @Controller()
+@ApiExtraModels(ProductDtoSwaggerDescritor, ProductFilterResultSwaggerDescritor)
 export class ProductController {
   constructor(private readonly productFinderService: ProductFinderService, private readonly productFilterService: ProductFilterService) { }
 
   @Get("products/")
-  getProductListByFilter(@Query() queryParams: any): any {
-    const { nutrition, nova } = queryParams;
-    const result = this.productFilterService.filter(nutrition, nova);
+  @ApiOkResponse({
+    status: 200,
+    description: 'List containing product search results using the provided filter',
+    schema: { type: 'array', allOf: refs(ProductFilterResultSwaggerDescritor), example: findByFilterResponseExample }
+  })
+  @ApiDefaultResponse({ type: ErrorResponse, description: 'Default payload for all error responses' })
+  async getProductListByFilter(@Query('nutrition') nutrition: string, @Query('nova') nova: string): Promise<ProductFilterResult[]> {
+    const result = await this.productFilterService.filter(nutrition, nova);
     return result
   }
 
   @Get("products/:productId")
-  async getProductById(@Param() params: { productId: string }): Promise<any> {
-    const product = await this.productFinderService.findProductById(params.productId);
-    if (product == null) return {
-      error: "Product not found"
-    }
+  @ApiOkResponse({
+    status: 200,
+    description: 'Response when the product is found when searching for its id',
+    schema: { allOf: refs(ProductDtoSwaggerDescritor), example: productResponseExample }
+  })
+  @ApiDefaultResponse({ type: ErrorResponse, description: 'Default payload for all error responses' })
+  async getProductById(@Param('productId') productId: string): Promise<ProductDto> {
+    const product = await this.productFinderService.findProductById(productId);
     return this.toProductDto(product);
   }
 
