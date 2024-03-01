@@ -1,8 +1,4 @@
-
-
 # Open Food Facts Scraping API
-
-
 
 Esta é uma API em Nest que realiza scraping do site Open Food Facts possibilitando a busca de um produto específico através do seu código ou uma lista de produtos.
 
@@ -17,9 +13,10 @@ Tabelas de conteúdo
 3. [Como executar localmente](#executarLocal)
 4. [Especificação Swagger (OAS 3.0)](#specSwagger)
 *******
-Segue abaixo a descrição dos endpoints da API, bem como o seu comportamento.
+
 ## Endpoints
 <div id='endpoints'/> 
+Segue abaixo a descrição dos endpoints da API, bem como o seu comportamento.
 
 ### Obter Produtos
 <div id='obterProdutos'/> 
@@ -36,7 +33,8 @@ Endpoint para obter uma lista de produtos baseado na classificação NOVA e/ou N
 
 - `nova` (string, opcional): Filtra produtos de acordo com a classificação NOVA informada.
 - `nutrition` (string, opcional): Filtra produtos de acordo com a classificação Nutri-Score informada.  
-**Caso nenhum parâmetro seja enviado a API retornará uma lista com todos os produtos.**
+
+Caso nenhum parâmetro seja enviado a API retornará uma lista com todos os produtos.
 
 #### Resposta
 
