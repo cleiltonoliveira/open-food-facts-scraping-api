@@ -1,0 +1,47 @@
+name: Generate Swagger
+
+on:
+  push:
+    branches:
+      - main  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Nest.js app
+        run: npm run build
+
+      - name: Generate Swagger files
+        run: npm run swagger:generate
+        
+      - name: Copy Swagger file to root directory
+        run: |
+          cp ./dist/swagger.json ./swagger.json
+
+      - name: Checkout to docs branch
+        run: |
+          git checkout docs
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add swagger.json
+          git commit -m "Generate Swagger files"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
