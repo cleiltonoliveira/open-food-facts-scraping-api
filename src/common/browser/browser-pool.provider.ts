@@ -3,7 +3,7 @@ import { BrowserPool } from './browser-pool';
 
 export const browserPoolProvider= (poolSize: number): Provider => ({
     provide: BrowserPool,
-    useFactory: () => new BrowserPool(poolSize),
+    useFactory: () => new BrowserPool(),
     scope: Scope.DEFAULT, 
     inject: [],
   });
