@@ -7,7 +7,7 @@ import GatewayTimeoutException from "src/error/custom-exceptions/gateway-timeout
 export class SiteFetcherService {
     constructor(private readonly browserPool: BrowserPool) { }
 
-    async fetch(pageUrl: string) {
+    async fetch(pagePath: string) {
         let browser: Browser;
         try {
             browser = await this.browserPool.acquire();
@@ -24,8 +24,10 @@ export class SiteFetcherService {
                 }
             });
 
-            console.log(`- Sending request to: ${pageUrl}`)
-            await page.goto(pageUrl);
+            const pageUri = `${process.env.OPEN_FOOD_FACTS_BASE_URL}/${pagePath}`
+
+            console.log(`- Sending request to: ${pageUri}`)
+            await page.goto(pageUri);
             console.log(`- Request success!!!`)
 
             return page;

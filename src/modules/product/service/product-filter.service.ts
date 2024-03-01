@@ -10,11 +10,11 @@ export class ProductFilterService {
     constructor(private readonly siteFetcherService: SiteFetcherService) { }
 
     async filter(nutritionParam: string, novaParam: string): Promise<ProductFilterResult[]> {
-        const url = `https://br.openfoodfacts.org/${this.composeUri(nutritionParam, novaParam)}`
+        const path = this.composeUri(nutritionParam, novaParam)
 
         console.log(`Preparing to fetch products with filter${nutritionParam ? ' nutrition=' + nutritionParam : ''}${novaParam ? ' nova=' + novaParam : ''}`)
 
-        const page = await this.siteFetcherService.fetch(url)
+        const page = await this.siteFetcherService.fetch(path)
 
         await page.waitForSelector('title');
         if (await page.title() == "Erro") {

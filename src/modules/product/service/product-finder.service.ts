@@ -10,7 +10,7 @@ export class ProductFinderService {
     constructor(private readonly siteFetcherService: SiteFetcherService) { }
 
     async findProductById(productId: string) {
-        const page = await this.siteFetcherService.fetch('https://br.openfoodfacts.org/produto/' + productId)
+        const page = await this.siteFetcherService.fetch(`produto/${productId}`)
         await page.waitForSelector('title');
         if (await page.title() == "Erro") {
            throw new NotFoundException(`Product not found for id ${productId}`)
