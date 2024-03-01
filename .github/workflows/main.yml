@@ -39,6 +39,7 @@ jobs:
           git stash
           git checkout docs
           git stash pop
+          git checkout --theirs swagger.json
           git add swagger.json
           git commit -m "Generate Swagger files"
           git push origin docs
