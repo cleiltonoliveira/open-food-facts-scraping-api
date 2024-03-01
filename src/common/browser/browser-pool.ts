@@ -8,9 +8,9 @@ export class BrowserPool {
     initializing: boolean;
     initializationPromise: Promise<void>;
 
-    constructor(poolSize: number) {
-        this.poolSize = poolSize;
-        this.pool = [];
+    constructor() {
+        this.poolSize = parseInt(process.env.MAX_BROWSER_POOL_SIZE) || 1;
+        this.pool = []
         this.initializing = false;
         this.initializationPromise = null;
         this.initialize()
@@ -52,7 +52,7 @@ export class BrowserPool {
             await browser.close();
         } else {
             this.pool.push(browser);
-            console.log("Instance returned to pool" )
+            console.log("Instance returned to pool")
         }
     }
 
