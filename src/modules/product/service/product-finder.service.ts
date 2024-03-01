@@ -18,12 +18,14 @@ export class ProductFinderService {
         const foodProduct = new Product();
 
         await page.waitForSelector('#panel_nutrition_facts_table_content');
+        console.log("Starting product extraction...")
 
         foodProduct.title = await this.getProductTitle(page);
         foodProduct.quantity = await this.getProductQuantity(page);
         foodProduct.ingredients = await this.getProductIngredients(page);;
         foodProduct.nutrition = await this.getProductNutritionDetails(page);
 
+        console.log("Extraction finished!")
         this.siteFetcherService.release(page);
 
         return foodProduct;
